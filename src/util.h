@@ -1,8 +1,13 @@
+#ifndef UTIL_H
+#define UTIL_H
 #include <stdio.h>
 
 void printBinary(unsigned int binary) 
 {
-	unsigned int mask, bit;
+	unsigned int mask, bit, isEven = 0;
+
+	if (binary & 1)
+		isEven = 1;
 
 	while (binary != 0)
 	{
@@ -21,11 +26,9 @@ void printBinary(unsigned int binary)
 
 		binary = binary << 1;
 	} 
+
+	if (!isEven)
+		printf("0");
 }
 
-int main() 
-{
-	printBinary(11);
-
-	return 0;
-}
+#endif
