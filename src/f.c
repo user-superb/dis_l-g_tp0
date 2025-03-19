@@ -29,7 +29,7 @@ void read()
 	// Variables
 	//
 	unsigned int result = 0;
-	int signo, aux_integer = 0;
+	int signo, aux_entero = 0, aux_decimal = 0;
 
 	// Signo
 	//
@@ -57,18 +57,26 @@ void read()
 		aux_index++;
 	}
 
-	aux_integer = atoi(str_entero);
-	printf("Parte Entera: %d\n", aux_integer);
+	aux_entero = atoi(str_entero);
+	printf("Parte Entera: %d\n", aux_entero);
 
-	if (aux_integer > 127 | (signo != 0 && aux_integer * signo < -128))
+	if (aux_entero > 127 | (signo != 0 && aux_entero * signo < -128))
 	{
 		printf("El número superó el rango.\n");
 		return;
 	}
-	
+
+	// Parte Decimal
+	// 
+	if (binary[aux_index] == '.' && aux_index <= 8)
+	{
+		
+	}
+
+
 	// Asignar los valores de los bits
 	//
-	result = result | (aux_integer << BITS_D) | (signo << BITS_E + BITS_D);
+	result = result | (aux_entero << BITS_D) | (signo << BITS_E + BITS_D);
 	printBinary(result, 15);
 	
 	int i;
@@ -78,7 +86,7 @@ void read()
 	for (i = 0; i < BITS_D; i++)
 		printf("D");
 	printf("\n");
-	
+
 
 }
 
