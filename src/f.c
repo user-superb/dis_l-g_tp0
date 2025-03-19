@@ -4,27 +4,11 @@
 #include "util.h"
 
 #define STR_LEN 16
-
-void asignarBit(unsigned int *binary, unsigned int pos)
-{
-	unsigned int mask = 1;
-
-	mask = mask << pos;
-
-	*binary = *binary | mask;
-}
+#define BITS_E 7
+#define BITS_D 8
 
 void read() 
 {
-	/*
-	 *
-	 * CONSTANTES
-	 *
-	*/
-	// Q(BITS_E, BITS_D)
-	const unsigned int BITS_E = 7,
-	      		BITS_D = 8;
-
 	// Lectura
 	//
 	printf("Ingrese un valor (+-eee.ffff): \n");
@@ -76,7 +60,7 @@ void read()
 	aux_integer = atoi(str_entero);
 	printf("Parte Entera: %d\n", aux_integer);
 
-	if (aux_integer > 128)
+	if (aux_integer > 127 | (signo != 0 && aux_integer * signo < -128))
 	{
 		printf("El número superó el rango.\n");
 		return;
@@ -94,6 +78,7 @@ void read()
 	for (i = 0; i < BITS_D; i++)
 		printf("D");
 	printf("\n");
+	
 
 }
 
