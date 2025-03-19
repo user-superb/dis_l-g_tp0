@@ -13,8 +13,9 @@ TARGET:= program.exe
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CC) $(OBJ) -o $(TARGET)
+	$(CC) -fno-common $(OBJ) -o $(TARGET) 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) -c $< -o $@ $(INCLUDE_DIR)
+
 

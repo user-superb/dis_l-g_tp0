@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <limits.h>
+
+char readOpt()
+{
+	char c, opt = '?';
+	while((c = getchar()) != '\n' && c != EOF)
+	{
+		opt = c;
+	}
+
+	return opt;
+}
+
+void printBinary(unsigned int binary, unsigned int n_bits) 
+{
+	unsigned int mask, bit, isEven = 0;
+
+	mask = 1 << n_bits;
+	while (mask)
+	{
+		printf("%d", (binary & mask ? 1 : 0));
+		mask = mask >> 1;
+	} 
+}
+
