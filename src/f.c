@@ -12,17 +12,18 @@ void read()
 	// Lectura
 	//
 	printf("Ingrese un valor (+-eee.ffff): \n");
-	printf("Rango decimal: %s\n", "-128.99609375 <= x <= 127.99609375");
+	printf("Rango decimal: %s\n", "-128 <= x <= 127.99609375");
 
 	printf(":> ");
 
 	int index = 0;
 	char binary[STR_LEN], c;
 
-	while ((c = getchar()) != '\n' && c != EOF && index < STR_LEN)
+	while ((c = getchar()) != '\n' && c != EOF && index < STR_LEN-1)
 	{
 		binary[index++] = c;
 	}
+	binary[index] = '\0';
 
 
 
@@ -51,14 +52,14 @@ void read()
 
 	char str_entero[100];
 
-	while (binary[aux_index] != '.' && aux_index <= 7)
+	while (binary[aux_index] != '.' && binary[aux_index] != '\n' && aux_index < 99)
 	{
 		str_entero[aux_index] = binary[aux_index];
 		aux_index++;
 	}
+	str_entero[aux_index] = '\0';
 
 	aux_entero = atoi(str_entero);
-	printf("Parte Entera: %d\n", aux_entero);
 
 	if (aux_entero > 127 | (signo != 0 && aux_entero * signo < -128))
 	{
@@ -67,17 +68,34 @@ void read()
 	}
 
 	// Parte Decimal
-	// 
-	if (binary[aux_index] == '.' && aux_index <= 8)
+	//
+	char str_decimal[100];
+	unsigned int j = 0;
+	if (binary[aux_index] == '.' && aux_index < 15)
 	{
-		
+		//aux_index++;
+		while (binary[aux_index] != '\n' && j < 99)
+		{
+			str_decimal[j] = binary[aux_index];
+			aux_index++;
+			j++;
+		}
 	}
 
+	str_decimal[j] = '\0';
+
+	aux_decimal = atoi(str_decimal);	
+
+	printf("str_entero: %s\nstr_decimal: %s\n", str_entero, str_decimal);
 
 	// Asignar los valores de los bits
 	//
-	result = result | (aux_entero << BITS_D) | (signo << BITS_E + BITS_D);
+	result = result | (aux_entero << BITS_D) | (signo << BITS_E + BITS_D) ;
+	result += (int) (atof(str_decimal) * 256);
+
 	printBinary(result, 15);
+
+	printf("\n?: %f", atof("123,1"));
 	
 	int i;
 	printf("\nS");
@@ -86,7 +104,5 @@ void read()
 	for (i = 0; i < BITS_D; i++)
 		printf("D");
 	printf("\n");
-
-
 }
 
