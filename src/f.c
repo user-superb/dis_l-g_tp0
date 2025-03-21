@@ -29,8 +29,12 @@ void read()
 
 	// Variables
 	//
-	unsigned int result = 0;
-	int signo, aux_entero = 0, aux_decimal = 0;
+	unsigned int result = 0, 
+		     signo,
+		     aux_decimal,
+		     aux_index;
+
+	int 	aux_entero = 0;
 
 	// Signo
 	//
@@ -48,7 +52,6 @@ void read()
 
 	// Parte Entera
 	//
-	int aux_index = 0;
 
 	char str_entero[100];
 
@@ -73,36 +76,25 @@ void read()
 	unsigned int j = 0;
 	if (binary[aux_index] == '.' && aux_index < 15)
 	{
-		//aux_index++;
-		while (binary[aux_index] != '\n' && j < 99)
+		aux_index++;
+		while (binary[aux_index] != '\0' && j < 99)
 		{
 			str_decimal[j] = binary[aux_index];
 			aux_index++;
 			j++;
 		}
 	}
+	aux_decimal = (unsigned int) ((atoi(str_decimal) * (1 << BITS_D) / uintPow(10, j)));
 
-	str_decimal[j] = '\0';
+	// Conversión __ Consultar si es legal (Spoiler: No es legal).
+	//aux_decimal = (unsigned int) (atof(str_decimal) * (1 << BITS_D));
 
-	aux_decimal = atoi(str_decimal);	
 
-	printf("str_entero: %s\nstr_decimal: %s\n", str_entero, str_decimal);
 
-	// Asignar los valores de los bits
-	//
-	result = result | (aux_entero << BITS_D) | (signo << BITS_E + BITS_D) ;
-	result += (int) (atof(str_decimal) * 256);
+	/* Asignar Binario */
+	result = result | (aux_entero << BITS_D) | (signo << BITS_E + BITS_D) | aux_decimal;
 
-	printBinary(result, 15);
-
-	printf("\n?: %f", atof("123,1"));
-	
-	int i;
-	printf("\nS");
-	for (i = 0; i < BITS_E; i++)
-		printf("E");
-	for (i = 0; i < BITS_D; i++)
-		printf("D");
-	printf("\n");
+	/* Mostrar Resultado */
+	printf("HEX: %#04x\n", result);
 }
 

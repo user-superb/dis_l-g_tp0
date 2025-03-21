@@ -24,3 +24,16 @@ void printBinary(unsigned int binary, unsigned int n_bits)
 	} 
 }
 
+unsigned int uintPow(unsigned int value, unsigned int n)
+{
+	if (!n)
+		return 1;
+
+	int initial_value = value,
+			i = 1;
+
+	for (; i < n; i++)
+		value *= initial_value;
+
+	return value;
+}
