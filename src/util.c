@@ -12,6 +12,15 @@ char readOpt()
 	return opt;
 }
 
+int isDigit(char c)
+{
+	if (c >= '0' && c <= '9')
+		return 1;
+
+	return 0;
+}
+
+
 void printBinary(unsigned int binary, unsigned int n_bits) 
 {
 	unsigned int mask, bit, isEven = 0;
