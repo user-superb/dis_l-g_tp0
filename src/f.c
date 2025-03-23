@@ -9,8 +9,7 @@
 
 void read() 
 {
-	// Lectura
-	//
+	/* Lectura */
 	printf("Ingrese un valor (+-eee.ffff): \n");
 	printf("Rango decimal: %s\n", "-128 <= x <= 127.99609375");
 
@@ -52,11 +51,16 @@ void read()
 
 	// Parte Entera
 	//
-
 	char str_entero[100];
 
 	while (binary[aux_index] != '.' && binary[aux_index] != '\n' && aux_index < 99)
 	{
+		if (!isDigit(binary[aux_index]))
+		{
+			printf("Se detectó un caracter erroneo.\n");
+			return;
+		}
+
 		str_entero[aux_index] = binary[aux_index];
 		aux_index++;
 	}
@@ -74,22 +78,27 @@ void read()
 	//
 	char str_decimal[100];
 	unsigned int j = 0;
-	if (binary[aux_index] == '.' && aux_index < 15)
+
+	if (binary[aux_index] == '.' && aux_index < 99)
 	{
 		aux_index++;
-		while (binary[aux_index] != '\0' && j < 99)
+		while (binary[aux_index] != '\0' && j <= 4) // según el profesor: solo me interesan los primeros 4 digitos ya que la resolución es demasiado chica por lo tanto j <= 4.
 		{
+			if (!isDigit(binary[aux_index]))
+			{
+				printf("Se detectó un caracter erroneo.\n");
+				return;
+			}
+
 			str_decimal[j] = binary[aux_index];
 			aux_index++;
 			j++;
 		}
 	}
+
+
+	/* aux_decimal = atoi(str_decimal) * 256 / 10^n; n = 1, 2, 3, 4 */
 	aux_decimal = (unsigned int) ((atoi(str_decimal) * (1 << BITS_D) / uintPow(10, j)));
-
-	// Conversión __ Consultar si es legal (Spoiler: No es legal).
-	//aux_decimal = (unsigned int) (atof(str_decimal) * (1 << BITS_D));
-
-
 
 	/* Asignar Binario */
 	result = result | (aux_entero << BITS_D) | (signo << BITS_E + BITS_D) | aux_decimal;
