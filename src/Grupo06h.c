@@ -111,5 +111,25 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 
 void h()
 {
-	printf("test: [%#04x]\n", readNumber(16,15));
+	unsigned int x, m, b, y;
+    printf("VARIABLE X: ");
+    x = readNumber(16,15); //Q(16,15) 32 bits
+    printf("VARIABLE m: ");
+    m = readNumber(0,15);   //Q(0,15) 16 bits
+    printf("VARIABLE b: ");
+    b = readNumber(7,8);    //Q(7,8) 16 bits
+
+    x = x >> 7;  //Desplazamos x para multiplicar con m.
+
+    unsigned int temp = x * m;  // Q(9,8) * Q(0,15) = Q(9,23)
+
+    x = temp >> 8;  // pasa de Q(9,23) a Q(16,15)
+
+    b = b << 7;  // Pasa de Q(7,8) a Q(16,15)
+
+    // Sumamos en la misma representación
+    y = x + b;
+
+
+    printf("Resultado: [%08x]\n", y);
 }
