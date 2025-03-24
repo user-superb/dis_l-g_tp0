@@ -70,8 +70,7 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 		str_entero[aux_index] = '\0';
 
 		aux_entero = atoi(str_entero);
-		printf("str_entero: %s\n", str_entero);
-		if (aux_entero > (1 << BITS_E) )
+		if (aux_entero > (1 << BITS_E) - 1)
 		{
 			printf("El número superó el rango.\n");
 			return 0;
@@ -103,15 +102,13 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 
 
 
-	/* Conversión a Q(7,8) */
 	result = result | (aux_entero << BITS_F) | (signo << BITS_E + BITS_F) | aux_decimal;
 
 	return result;
 }
 
-void h()
-{
-	unsigned int x, m, b, y;
+void h() {
+    unsigned int long long x, m, b, y;
     printf("VARIABLE X: ");
     x = readNumber(16,15); //Q(16,15) 32 bits
     printf("VARIABLE m: ");
@@ -121,7 +118,7 @@ void h()
 
     x = x >> 7;  //Desplazamos x para multiplicar con m.
 
-    unsigned int temp = x * m;  // Q(9,8) * Q(0,15) = Q(9,23)
+    unsigned int long long temp = x * m;  // Q(9,8) * Q(0,15) = Q(9,23)
 
     x = temp >> 8;  // pasa de Q(9,23) a Q(16,15)
 
