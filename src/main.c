@@ -3,8 +3,8 @@
 
 #include "util.h"
 
-#include "f.h"
-#include "g.h"
+#include "Grupo06f.h"
+#include "Grupo06h.h"
 
 int main() 
 {
@@ -21,7 +21,9 @@ int main()
 				read();
 			break;
 			case '2':
-				do_something();
+			break;
+			case '3':
+				h();
 			break;
 
 			default:
