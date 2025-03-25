@@ -109,11 +109,11 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 	/* Chequeos */
 	if (signo)
 	{
-		if (str_decimal[0] != '\0') // Es igual a preguntar si 'str_decimal' no está vacío.
+		if (str_decimal[0] != '\0') // Es equivalente a preguntar si 'str_decimal' no está vacío.
 		{
 			/* Asignaciones */
 			aux_decimal = (unsigned int) ( (atoi(str_decimal) * (1 << BITS_F)) / uintPow(10, j));
-			aux_decimal = (1 << BITS_F) - aux_decimal;
+			aux_decimal = (1 << BITS_F) - aux_decimal; // Es equivalente a calcular la diferencia entre un número decimal y 1. Por ejemplo: 1 - 0.30 = 0.70;
 
 			aux_entero = ~aux_entero;
 		} else
@@ -125,7 +125,8 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 	}
 
 	printf("str_entero: %s\nstr_decimal: %s\n", str_entero, str_decimal);
-
+	aux_decimal = (unsigned int) ((atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j)));
+	
 	result = result | (aux_entero << BITS_F) | (signo << BITS_E + BITS_F) | aux_decimal;
 
 	return result;
