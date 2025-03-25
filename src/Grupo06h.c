@@ -52,12 +52,16 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 	// Analizar Gramaticalmente la Parte Entera
 	//
 	char str_entero[100];
+	unsigned int i = 0;
 	if (binary[0] != '.' && binary[0] != ',')
 	{
-		if (signo) 
-			str_entero[aux_index++] = '-';
+		if (signo)
+		{
+			aux_index++;
+		}
+			
 
-		while (aux_index < STR_LEN-1 && binary[aux_index] != '.' && binary[aux_index] != '\0')
+		while (i < STR_LEN-1 && binary[aux_index] != '.' && binary[aux_index] != '\0')
 		{
 			if (!isDigit(binary[aux_index]))
 			{
@@ -65,11 +69,13 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 				return 0;
 			}
 
-			str_entero[aux_index] = binary[aux_index];
+			str_entero[i] = binary[aux_index];
+			i++;
 			aux_index++;
 		}
-		str_entero[aux_index] = '\0';
+		str_entero[i] = '\0';
 
+		/* Asignación */
 		aux_entero = atoi(str_entero);
 		if (aux_entero > (1 << BITS_E) - 1)
 		{
@@ -98,10 +104,27 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 			j++;
 		}
 	}
+	str_decimal[j] = '\0';
 
-	aux_decimal = (unsigned int) ((atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j)));
+	/* Chequeos */
+	if (signo)
+	{
+		if (str_decimal[0] != '\0') // Es igual a preguntar si 'str_decimal' no está vacío.
+		{
+			/* Asignaciones */
+			aux_decimal = (unsigned int) ( (atoi(str_decimal) * (1 << BITS_F)) / uintPow(10, j));
+			aux_decimal = (1 << BITS_F) - aux_decimal;
 
+			aux_entero = ~aux_entero;
+		} else
+		{
+			/* Asignaciones */
+			aux_decimal = (unsigned int) ((atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j)));
+			aux_entero = ~(aux_entero - 1);
+		}
+	}
 
+	printf("str_entero: %s\nstr_decimal: %s\n", str_entero, str_decimal);
 
 	result = result | (aux_entero << BITS_F) | (signo << BITS_E + BITS_F) | aux_decimal;
 
