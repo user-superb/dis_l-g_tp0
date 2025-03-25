@@ -5,8 +5,9 @@
 
 #include "Grupo06f.h"
 #include "Grupo06h.h"
+#include "g.h"
 
-int main() 
+int main()
 {
 	setlocale(LC_ALL, "spanish");
 
@@ -21,6 +22,7 @@ int main()
 				read();
 			break;
 			case '2':
+			    correrG();
 			break;
 			case '3':
 				h();

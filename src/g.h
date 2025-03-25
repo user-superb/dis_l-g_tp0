@@ -3,6 +3,6 @@
 
 #include "util.h"
 
-void do_something();
+void correrG();
 
 #endif
