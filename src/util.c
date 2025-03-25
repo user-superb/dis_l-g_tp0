@@ -20,7 +20,6 @@ int isDigit(char c)
 	return 0;
 }
 
-
 void printBinary(unsigned int binary, unsigned int n_bits) 
 {
 	unsigned int mask, bit, isEven = 0;
