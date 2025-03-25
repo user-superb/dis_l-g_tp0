@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "util.h"
 
@@ -108,25 +109,31 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 }
 
 void h() {
-    unsigned int long long x, m, b, y;
+    int32_t x, m, b;
+    int64_t y;
+
     printf("VARIABLE X: ");
-    x = readNumber(16,15); //Q(16,15) 32 bits
+    x = readNumber(16,15); // Q(16,15) 32 bits
+    printf("X = %08x\n", x);
+
     printf("VARIABLE m: ");
-    m = readNumber(0,15);   //Q(0,15) 16 bits
+    m = readNumber(0,15);  // Q(0,15) 16 bits
+    printf("m = %04x\n", m);
+
     printf("VARIABLE b: ");
-    b = readNumber(7,8);    //Q(7,8) 16 bits
+    b = readNumber(7,8);   // Q(7,8) 16 bits
+    printf("b = %04x\n", b);
 
-    x = x >> 7;  //Desplazamos x para multiplicar con m.
+    x = x >> 7;
 
-    unsigned int long long temp = x * m;  // Q(9,8) * Q(0,15) = Q(9,23)
+    int64_t temp = (int64_t)x * m;  // Q(9,8) * Q(0,15) = Q(9,23)
 
-    x = temp >> 8;  // pasa de Q(9,23) a Q(16,15)
+    x = (temp + (1 << 7)) >> 8;
 
-    b = b << 7;  // Pasa de Q(7,8) a Q(16,15)
+    // b debe permanecer con signo al desplazarse
+    int64_t b_escalado = (int64_t)b << 7;
 
-    // Sumamos en la misma representación
-    y = x + b;
-
+    y = x + b_escalado; // suma con signo en la misma representación
 
     printf("Resultado: [%08x]\n", y);
 }
