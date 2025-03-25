@@ -4,8 +4,8 @@
 #include "util.h"
 
 #include "Grupo06f.h"
+#include "Grupo06g.h"
 #include "Grupo06h.h"
-#include "g.h"
 
 int main()
 {

@@ -122,15 +122,41 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 			aux_decimal = (unsigned int) ((atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j)));
 			aux_entero = ~(aux_entero - 1);
 		}
+	} else
+	{
+		aux_decimal = (unsigned int) ((atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j)));
 	}
 
-	printf("str_entero: %s\nstr_decimal: %s\n", str_entero, str_decimal);
-	aux_decimal = (unsigned int) ((atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j)));
-	
 	result = result | (aux_entero << BITS_F) | (signo << BITS_E + BITS_F) | aux_decimal;
-
 	return result;
 }
+
+
+int validarX(int32_t x, int cota_sup, int cota_inf)
+{
+	/* Q(16,15) 32 Bits */
+
+	int32_t mask = ~0;
+	int16_t p_en, p_frac;
+	p_en = p_frac = 0;
+
+	p_en = x >> 15;
+	p_frac = x & ~(mask << 15);
+	printf("p_en: %d\np_frac: %x\n", p_en, p_frac);
+
+	if (x >> 31) // Equivale a preguntar si x es negativa
+	{
+		// Es negativa
+
+
+	}
+	else
+	{
+		// No es negativa
+	}
+	return 1;
+}
+
 
 void h() {
     int32_t x, m, b;
@@ -139,6 +165,7 @@ void h() {
     printf("VARIABLE X: ");
     x = readNumber(16,15); // Q(16,15) 32 bits
     printf("X = %08x\n", x);
+	validarX(x, 100, -100);
 
     printf("VARIABLE m: ");
     m = readNumber(0,15);  // Q(0,15) 16 bits
@@ -155,9 +182,9 @@ void h() {
     x = (temp + (1 << 7)) >> 8;
 
     // b debe permanecer con signo al desplazarse
-    int64_t b_escalado = (int64_t)b << 7;
+    int64_t b_scaled = (int64_t)b << 7;
 
-    y = x + b_escalado; // suma con signo en la misma representación
+    y = x + b_scaled; // suma con signo en la misma representación
 
     printf("Resultado: [%08x]\n", y);
 }
