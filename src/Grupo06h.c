@@ -131,6 +131,17 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 	return result;
 }
 
+void imprimirDec(int32_t x, unsigned int BITS_E, unsigned int BITS_F)
+{
+	int32_t mask = ~0, p_en;
+	uint32_t p_frac;
+	p_en = p_frac = 0;
+
+	p_en = x >> BITS_F;
+	p_frac = x & ~(mask << BITS_F);
+
+	printf("X = %d.%u\n", p_en, p_frac);
+}
 
 int validarX(int32_t x, int cota_sup, int cota_inf)
 {
@@ -143,13 +154,12 @@ int validarX(int32_t x, int cota_sup, int cota_inf)
 	p_en = x >> 15;
 	p_frac = x & ~(mask << 15);
 
-	printf("p_en: %d \np_frac: %x\n", p_en, p_frac);
 	if (x >> 31) // Equivale a preguntar si x es negativa
 	{
 		// Es negativa
 		if (p_en < -65408)
 		{
-			printf("X no se encuentra dentro de las cotas [-65408, 65408]\n");
+			printf("X no se encuentra dentro de las cotas [%d, %d]\n", cota_inf, cota_sup);
 			return 0;
 		}
 	}
@@ -158,11 +168,11 @@ int validarX(int32_t x, int cota_sup, int cota_inf)
 		// No es negativa
 		if (p_en > 65408)
 		{
-			printf("X no se encuentra dentro de las cotas [-65408, 65408]\n");
+			printf("X no se encuentra dentro de las cotas [%d, %d]\n", cota_inf, cota_sup);
 			return 0;
 		} else if (p_en == 65408 && p_frac != 0)
 		{
-			printf("X no se encuentra dentro de las cotas [-65408, 65408]\n");
+			printf("X no se encuentra dentro de las cotas [%d, %d]\n", cota_inf, cota_sup);
 			return 0;
 		}
 	}
@@ -176,11 +186,12 @@ void h() {
 
     printf("VARIABLE X: ");
     x = readNumber(16,15); // Q(16,15) 32 bits
-    printf("X = %08x\n", x);
-	if (validarX(x, 100, -100) == 0)
+	if (validarX(x, -65408, 65408) == 0)
 	{
 		return;
 	}
+	printf("X = %08x\n", x);
+	imprimirDec(x, 16, 15);
 
     printf("VARIABLE m: ");
     m = readNumber(0,15);  // Q(0,15) 16 bits
