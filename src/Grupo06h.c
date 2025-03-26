@@ -77,11 +77,6 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 
 		/* Asignación */
 		aux_entero = atoi(str_entero);
-		if (aux_entero > (1 << BITS_E) - 1)
-		{
-			printf("El número superó el rango.\n");
-			return 0;
-		}
 	}
 	
 	// Analizar Gramaticalmente la Parte Decimal
@@ -109,6 +104,13 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 	/* Chequeos */
 	if (signo)
 	{
+		/* Comprobación del Rango negativo */
+		if (aux_entero > (1 << BITS_E))
+		{
+			printf("El número superó el rango.\n");
+			return 0;
+		}
+
 		if (str_decimal[0] != '\0') // Es equivalente a preguntar si 'str_decimal' no está vacío.
 		{
 			/* Asignaciones */
@@ -124,6 +126,13 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 		}
 	} else
 	{
+		/* Comprobación del Rango positivo */
+		if (aux_entero > (1 << BITS_E) - 1)
+		{
+			printf("El número superó el rango.\n");
+			return 0;
+		}
+
 		aux_decimal = (unsigned int) ((atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j)));
 	}
 
@@ -145,7 +154,7 @@ void imprimirDec(int32_t x, unsigned int BITS_E, unsigned int BITS_F)
 	p_frac = x & ~(mask << BITS_F);
     p_frac = (p_frac * 10000);
     p_frac = p_frac >> BITS_F;
-	printf("Y = %d.%u\n", p_en, p_frac);
+	printf("DECIMAL = %d.%u\n", p_en, p_frac);
 }
 
 int validarX(int32_t x, int cota_sup, int cota_inf)
@@ -214,6 +223,6 @@ void h() {
 
     y = x + b_scaled; // suma con signo en la misma representación
 
-    printf("Resultado: [%08x]\n", y);
+    printf("Resultado:\nHEXADECIMAL: [%08x]\n", y);
     imprimirDec(y, 16, 15);
 }
