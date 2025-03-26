@@ -136,27 +136,39 @@ int validarX(int32_t x, int cota_sup, int cota_inf)
 {
 	/* Q(16,15) 32 Bits */
 
-	int32_t mask = ~0;
-	int16_t p_en, p_frac;
+	int32_t mask = ~0, p_en;
+	uint16_t p_frac;
 	p_en = p_frac = 0;
 
 	p_en = x >> 15;
 	p_frac = x & ~(mask << 15);
-	printf("p_en: %d\np_frac: %x\n", p_en, p_frac);
 
+	printf("p_en: %d \np_frac: %x\n", p_en, p_frac);
 	if (x >> 31) // Equivale a preguntar si x es negativa
 	{
 		// Es negativa
-
-
+		if (p_en < -65408)
+		{
+			printf("X no se encuentra dentro de las cotas [-65408, 65408]\n");
+			return 0;
+		}
 	}
 	else
 	{
 		// No es negativa
+		if (p_en > 65408)
+		{
+			printf("X no se encuentra dentro de las cotas [-65408, 65408]\n");
+			return 0;
+		} else if (p_en == 65408 && p_frac != 0)
+		{
+			printf("X no se encuentra dentro de las cotas [-65408, 65408]\n");
+			return 0;
+		}
 	}
+
 	return 1;
 }
-
 
 void h() {
     int32_t x, m, b;
@@ -165,7 +177,10 @@ void h() {
     printf("VARIABLE X: ");
     x = readNumber(16,15); // Q(16,15) 32 bits
     printf("X = %08x\n", x);
-	validarX(x, 100, -100);
+	if (validarX(x, 100, -100) == 0)
+	{
+		return;
+	}
 
     printf("VARIABLE m: ");
     m = readNumber(0,15);  // Q(0,15) 16 bits
