@@ -133,14 +133,19 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 
 void imprimirDec(int32_t x, unsigned int BITS_E, unsigned int BITS_F)
 {
+
 	int32_t mask = ~0, p_en;
 	uint32_t p_frac;
 	p_en = p_frac = 0;
-
 	p_en = x >> BITS_F;
+    if (x >> (BITS_F + BITS_E))
+    {
+        p_en += 1;
+    }
 	p_frac = x & ~(mask << BITS_F);
-
-	printf("X = %d.%u\n", p_en, p_frac);
+    p_frac = (p_frac * 10000);
+    p_frac = p_frac >> BITS_F;
+	printf("Y = %d.%u\n", p_en, p_frac);
 }
 
 int validarX(int32_t x, int cota_sup, int cota_inf)
@@ -191,16 +196,13 @@ void h() {
 		return;
 	}
 	printf("X = %08x\n", x);
-	imprimirDec(x, 16, 15);
 
     printf("VARIABLE m: ");
     m = readNumber(0,15);  // Q(0,15) 16 bits
     printf("m = %04x\n", m);
-
     printf("VARIABLE b: ");
     b = readNumber(7,8);   // Q(7,8) 16 bits
     printf("b = %04x\n", b);
-
     x = x >> 7;
 
     int64_t temp = (int64_t)x * m;  // Q(9,8) * Q(0,15) = Q(9,23)
@@ -213,4 +215,5 @@ void h() {
     y = x + b_scaled; // suma con signo en la misma representación
 
     printf("Resultado: [%08x]\n", y);
+    imprimirDec(y, 16, 15);
 }
