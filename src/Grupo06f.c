@@ -7,7 +7,7 @@
 #define BITS_E 7
 #define BITS_F 8
 
-unsigned int f()
+void f()
 {
 	/* Variables */
 	unsigned int result = 0, 
@@ -40,7 +40,7 @@ unsigned int f()
 	if ((signo = getSign(binary)) == -1) 
 	{
 		printf("Se detectó un caracter erroneo. (Signo)\n");
-		return 0;
+		return;
 	}
 
 	
@@ -61,7 +61,7 @@ unsigned int f()
 			if (!isDigit(binary[aux_index]))
 			{
 				printf("Se detectó un caracter erroneo. (Entero)\n");
-				return 0;
+				return;
 			}
 
 			str_entero[i] = binary[aux_index];
@@ -86,7 +86,7 @@ unsigned int f()
 			if (!isDigit(binary[aux_index]))
 			{
 				printf("Se detectó un caracter erroneo. (Decimal)\n");
-				return 0;
+				return;
 			}
 
 			str_decimal[j] = binary[aux_index];
@@ -103,7 +103,7 @@ unsigned int f()
 		if (aux_entero > (1 << BITS_E)) // Ejemplo: Sea BITS_E = 8, Sí (aux_entero > 2^8) entonces:
 		{
 			printf("El número superó el rango.\n");
-			return 0;
+			return;
 		}
 
 		if (str_decimal[0] != '\0') // Es equivalente a preguntar si 'str_decimal' no está vacío.
@@ -125,7 +125,7 @@ unsigned int f()
 		if (aux_entero > (1 << BITS_E) - 1)
 		{
 			printf("El número superó el rango.\n");
-			return 0;
+			return;
 		}
 
 		aux_decimal = atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j);
