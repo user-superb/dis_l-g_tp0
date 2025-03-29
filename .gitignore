@@ -1,3 +1,4 @@
 *.o
 program.exe
 .vscode
+*.pdf
