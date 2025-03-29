@@ -7,7 +7,9 @@
 unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 {
 	/* Variables */
-	const unsigned int STR_LEN = 100;
+	const unsigned int ENT_LEN = 5, FRAC_LEN = 10;
+
+	const unsigned int STR_LEN = ENT_LEN + FRAC_LEN;
 
 	unsigned int result = 0, 
 		     signo,
@@ -21,12 +23,11 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 
 
 	/* Lectura */
-	printf("Ingrese un valor (+-eee.ffff): \n");
+	printf("Ingrese un valor (ej: 5.432): \n");
 	printf(":> ");
 
 	int index = 0;
 	char binary[STR_LEN], c;
-
 	while ((c = getchar()) != '\n' && c != EOF && index < STR_LEN-1)
 	{
 		binary[index++] = c;
@@ -35,31 +36,26 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 
 
 
-	// Comprobación del Signo 
+	// Obtener el signo
 	//
-	if (binary[0] == '+')
-		signo = 0;
-	else if (binary[0] == '-')
-		signo = 1;
-	else if (binary[0] >= '0' && binary[0] <= '9' || binary[0] == '.')
-		signo = 0;
-	else
+	if ((signo = getSign(binary)) == -1) 
 	{
 		printf("Se detectó un caracter erroneo. (Signo)\n");
 		return 0;
 	}
 
+	
+
 	// Analizar Gramaticalmente la Parte Entera
 	//
-	char str_entero[100];
+	char str_entero[STR_LEN];
 	unsigned int i = 0;
 	if (binary[0] != '.' && binary[0] != ',')
 	{
-		if (signo)
+		if (binary[0] == '+' || binary[0] == '-')
 		{
 			aux_index++;
 		}
-			
 
 		while (i < STR_LEN-1 && binary[aux_index] != '.' && binary[aux_index] != '\0')
 		{
@@ -81,7 +77,7 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 	
 	// Analizar Gramaticalmente la Parte Decimal
 	//
-	char str_decimal[100];
+	char str_decimal[STR_LEN];
 	unsigned int j = 0;
 	if (aux_index < STR_LEN - 1 && binary[aux_index] == '.')
 	{
@@ -102,10 +98,10 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 	str_decimal[j] = '\0';
 
 	/* Chequeos */
-	if (signo)
+	if (signo) // Si signo != 0
 	{
 		/* Comprobación del Rango negativo */
-		if (aux_entero > (1 << BITS_E))
+		if (aux_entero > (1 << BITS_E)) // Ejemplo: Sea BITS_E = 8, Sí (aux_entero > 2^8) entonces:
 		{
 			printf("El número superó el rango.\n");
 			return 0;
@@ -114,14 +110,14 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 		if (str_decimal[0] != '\0') // Es equivalente a preguntar si 'str_decimal' no está vacío.
 		{
 			/* Asignaciones */
-			aux_decimal = (unsigned int) ( (atoi(str_decimal) * (1 << BITS_F)) / uintPow(10, j));
+			aux_decimal = atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j);
 			aux_decimal = (1 << BITS_F) - aux_decimal; // Es equivalente a calcular la diferencia entre un número decimal y 1. Por ejemplo: 1 - 0.30 = 0.70;
 
 			aux_entero = ~aux_entero;
 		} else
 		{
 			/* Asignaciones */
-			aux_decimal = (unsigned int) ((atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j)));
+			aux_decimal = atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j);
 			aux_entero = ~(aux_entero - 1);
 		}
 	} else
@@ -133,7 +129,7 @@ unsigned int readNumber(unsigned int BITS_E, unsigned int BITS_F)
 			return 0;
 		}
 
-		aux_decimal = (unsigned int) ((atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j)));
+		aux_decimal = atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j);
 	}
 
 	result = result | (aux_entero << BITS_F) | (signo << BITS_E + BITS_F) | aux_decimal;
@@ -225,4 +221,13 @@ void h() {
 
     printf("Resultado:\nHEXADECIMAL: [%08x]\n", y);
     imprimirDec(y, 16, 15);
+}
+
+void unitTest_readBinary()
+{
+	uint32_t number;
+	printf("UNIT_TEST::LECTURA_DE_BINARIO\n");
+	printf("Q(16, 15) (123 para salir)\n");
+	while ((number = readNumber(16, 15)) != 0x003d8000) // 0x003d8000 == 123 en Q(16,15)
+		printf("number: %08x\n", number);
 }

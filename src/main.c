@@ -11,28 +11,33 @@ int main()
 {
 	setlocale(LC_ALL, "spanish");
 
+	/* Variables */
+	const char msg[] = "Seleccionar opcion: \n1: Punto f) \n2: Punto g) \n3: Punto h) \n\n4: UNIT_TEST_LECTURA_BINARIO\n\n5: Salir\n:> ";
+
 	char opt;
 
-	printf("Seleccionar n° Opcion: \n1: f) \n2: g) \n3: h) \n4: Salir\n:> ");
-	while ((opt = readOpt()) != '4')
+	printf(msg);
+	while ((opt = readOpt()) != '5')
 	{
 		switch (opt)
 		{
 			case '1':
-				read();
+				f();
 			break;
 			case '2':
-			    correrG();
+			    g();
 			break;
 			case '3':
 				h();
 			break;
-
+			case '4':
+				unitTest_readBinary();
+			break;
 			default:
 			break;
 		}
 
-		printf("Seleccionar n° Opcion: \n1: f) \n2: g) \n3: h) \n4: Salir\n:> ");
+		printf(msg);
 	}
 
 	return 0;

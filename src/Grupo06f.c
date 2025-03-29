@@ -7,7 +7,7 @@
 #define BITS_E 7
 #define BITS_F 8
 
-void read() 
+unsigned int f()
 {
 	/* Variables */
 	unsigned int result = 0, 
@@ -22,12 +22,11 @@ void read()
 
 
 	/* Lectura */
-	printf("Ingrese un valor (+-eee.ffff): \n");
+	printf("[-128, 127.99609375]\nIngrese un valor (ej: 1.432): \n");
 	printf(":> ");
 
 	int index = 0;
 	char binary[STR_LEN], c;
-
 	while ((c = getchar()) != '\n' && c != EOF && index < STR_LEN-1)
 	{
 		binary[index++] = c;
@@ -36,38 +35,33 @@ void read()
 
 
 
-	// Comprobación del Signo 
+	// Obtener el signo
 	//
-	if (binary[0] == '+')
-		signo = 0;
-	else if (binary[0] == '-')
-		signo = 1;
-	else if (binary[0] >= '0' && binary[0] <= '9' || binary[0] == '.')
-		signo = 0;
-	else
+	if ((signo = getSign(binary)) == -1) 
 	{
 		printf("Se detectó un caracter erroneo. (Signo)\n");
-		return;
+		return 0;
 	}
+
+	
 
 	// Analizar Gramaticalmente la Parte Entera
 	//
-	char str_entero[100];
+	char str_entero[STR_LEN];
 	unsigned int i = 0;
 	if (binary[0] != '.' && binary[0] != ',')
 	{
-		if (signo)
+		if (binary[0] == '+' || binary[0] == '-')
 		{
 			aux_index++;
 		}
-			
 
 		while (i < STR_LEN-1 && binary[aux_index] != '.' && binary[aux_index] != '\0')
 		{
 			if (!isDigit(binary[aux_index]))
 			{
 				printf("Se detectó un caracter erroneo. (Entero)\n");
-				return;
+				return 0;
 			}
 
 			str_entero[i] = binary[aux_index];
@@ -78,16 +72,11 @@ void read()
 
 		/* Asignación */
 		aux_entero = atoi(str_entero);
-		if (aux_entero > (1 << BITS_E) - 1)
-		{
-			printf("El número superó el rango.\n");
-			return;
-		}
 	}
 	
 	// Analizar Gramaticalmente la Parte Decimal
 	//
-	char str_decimal[100];
+	char str_decimal[STR_LEN];
 	unsigned int j = 0;
 	if (aux_index < STR_LEN - 1 && binary[aux_index] == '.')
 	{
@@ -97,7 +86,7 @@ void read()
 			if (!isDigit(binary[aux_index]))
 			{
 				printf("Se detectó un caracter erroneo. (Decimal)\n");
-				return;
+				return 0;
 			}
 
 			str_decimal[j] = binary[aux_index];
@@ -108,28 +97,41 @@ void read()
 	str_decimal[j] = '\0';
 
 	/* Chequeos */
-	if (signo)
+	if (signo) // Si signo != 0
 	{
+		/* Comprobación del Rango negativo */
+		if (aux_entero > (1 << BITS_E)) // Ejemplo: Sea BITS_E = 8, Sí (aux_entero > 2^8) entonces:
+		{
+			printf("El número superó el rango.\n");
+			return 0;
+		}
+
 		if (str_decimal[0] != '\0') // Es equivalente a preguntar si 'str_decimal' no está vacío.
 		{
 			/* Asignaciones */
-			aux_decimal = (unsigned int) ( (atoi(str_decimal) * (1 << BITS_F)) / uintPow(10, j));
+			aux_decimal = atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j);
 			aux_decimal = (1 << BITS_F) - aux_decimal; // Es equivalente a calcular la diferencia entre un número decimal y 1. Por ejemplo: 1 - 0.30 = 0.70;
 
 			aux_entero = ~aux_entero;
 		} else
 		{
 			/* Asignaciones */
-			aux_decimal = (unsigned int) ((atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j)));
+			aux_decimal = atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j);
 			aux_entero = ~(aux_entero - 1);
 		}
 	} else
 	{
-		aux_decimal = (unsigned int) ((atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j)));
+		/* Comprobación del Rango positivo */
+		if (aux_entero > (1 << BITS_E) - 1)
+		{
+			printf("El número superó el rango.\n");
+			return 0;
+		}
+
+		aux_decimal = atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j);
 	}
 
 	result = result | (aux_entero << BITS_F) | (signo << BITS_E + BITS_F) | aux_decimal;
 
-	/* Mostrar Resultado en Hexadecimal*/
-	printf("HEX: %#04x\n", result & 0xFFFF);
+	printf("Resultado: %04x\n", result & 0xffff);
 }

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <limits.h>
 
+
 char readOpt()
 {
 	char c, opt = '?';
@@ -30,6 +31,22 @@ void printBinary(unsigned int binary, unsigned int n_bits)
 		printf("%d", (binary & mask ? 1 : 0));
 		mask = mask >> 1;
 	} 
+}
+
+int getSign(char binary[])
+{
+	// Comprobación del Signo 
+	//
+	if (binary[0] == '+')
+		return 0;
+	else if (binary[0] == '-')
+		return 1;
+	else if (binary[0] >= '0' && binary[0] <= '9' || binary[0] == '.')
+		return 0;
+	else
+	{
+		return -1;
+	}
 }
 
 unsigned int uintPow(unsigned int value, unsigned int n)

@@ -3,8 +3,6 @@
 
 #include "util.h"
 
-void asignarBit(unsigned int *binary, unsigned int pos);
-
-void read();
+void f();
 
 #endif

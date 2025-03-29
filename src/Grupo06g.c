@@ -7,7 +7,7 @@ int getNumIngresado(int*);
 char procesarNum(unsigned int*,unsigned int*, int);
 void imprimirNumero(char,unsigned int, unsigned int);
 
-void correrG()
+void g()
 {
     unsigned int parteEntera,parteFraccionaria;
     char signo;
