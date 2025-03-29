@@ -109,7 +109,14 @@ void f()
 		if (str_decimal[0] != '\0') // Es equivalente a preguntar si 'str_decimal' no está vacío.
 		{
 			/* Asignaciones */
-			aux_decimal = atoi(str_decimal) * (1 << BITS_F) / uintPow(10, j);
+			aux_decimal = atoi(str_decimal);
+			if (aux_entero == (1 << BITS_E) && aux_decimal != 0)
+			{
+				printf("El número superó el rango.\n");
+				return;
+			}
+
+			aux_decimal = aux_decimal * (1 << BITS_F) / uintPow(10, j);
 			aux_decimal = (1 << BITS_F) - aux_decimal; // Es equivalente a calcular la diferencia entre un número decimal y 1. Por ejemplo: 1 - 0.30 = 0.70;
 
 			aux_entero = ~aux_entero;
